@@ -7,6 +7,10 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, recall_score, confusion_matrix
 import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib
+matplotlib.use('Agg') 
 
 
 # 1. CONFIGURATION
@@ -111,4 +115,39 @@ pipeline_livrable = {
     'knn': knn
 }
 joblib.dump(pipeline_livrable, "modele_tache1_knn_final.pkl")
-print("\n--- Succès ! Pipeline sauvegardé sous 'modele_tache1_knn_final.pkl' ---")
+print("\n--- Succès ! Pipeline sauvegardé sous 'modele_tache1_knn_final.pkl' ---") 
+
+print("\n--- Génération des graphiques Tâche 1 ---")
+
+# CORRECTION : On standardise l'intégralité du dataset X pour le dessin
+X_scaled_all = scaler.transform(X)
+
+# --- GRAPHIQUE 1 : La séparation magique de la PCA (2D) ---
+pca_visu = PCA(n_components=2)
+X_pca_2d = pca_visu.fit_transform(X_scaled_all)
+
+plt.figure(figsize=(10, 6))
+scatter = plt.scatter(X_pca_2d[:, 0], X_pca_2d[:, 1], c=y, cmap='viridis', edgecolor='k', s=50, alpha=0.7)
+plt.title("Pourquoi ça marche à 100% :\nSéparation parfaite par PCA")
+plt.xlabel(f"Composante Principale 1 ({pca_visu.explained_variance_ratio_[0]:.2%} de l'info)")
+plt.ylabel(f"Composante Principale 2 ({pca_visu.explained_variance_ratio_[1]:.2%} de l'info)")
+plt.legend(*scatter.legend_elements(), title="Légende (0=Vide, 1=Tuyau)")
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.savefig("graphique_tache1_pca_separation.png", dpi=300)
+print("-> Graphique PCA sauvegardé sous 'graphique_tache1_pca_separation.png'")
+plt.close() 
+
+# --- GRAPHIQUE 2 
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False, annot_kws={"size": 16})
+plt.title("Matrice de Confusion (Résultats sur le Test)")
+plt.xlabel("Prédiction de l'IA")
+plt.ylabel("Vraie Réalité")
+plt.xticks([0.5, 1.5], ['Pas de Tuyau (0)', 'Tuyau (1)'])
+plt.yticks([0.5, 1.5], ['Pas de Tuyau (0)', 'Tuyau (1)'])
+plt.tight_layout()
+plt.savefig("graphique_tache1_confusion_matrix.png", dpi=300)
+print("-> Matrice visuelle sauvegardée sous 'graphique_tache1_confusion_matrix.png'")
+plt.close()  
