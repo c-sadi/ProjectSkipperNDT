@@ -38,7 +38,7 @@ Le projet est divisé en 4 missions de difficulté croissante, allant du Machine
 ## 🛠️ Technologies Utilisées
 * **Langage :** Python
 * **Manipulation de Données :** Pandas, NumPy
-* **Machine Learning :** Scikit-Learn (PCA, KNN, Random Forest)
+* **Machine Learning :** Scikit-Learn (PCA, KNN)
 * **Traitement d'Image :** OpenCV
 * **Deep Learning :** PyTorch, Torchvision
 * **Visualisation :** Matplotlib
